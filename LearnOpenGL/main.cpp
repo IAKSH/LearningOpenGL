@@ -14,17 +14,20 @@ static void shaderInitialize()
 {
 	const char* vertexShaderSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
+		"layout (location = 1) in vec3 aColor;\n"
+		"out vec3 ourColor;\n"
 		"void main()\n"
 		"{\n"
-		"    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+		"    gl_Position = vec4(aPos,1.0);\n"
+		"    ourColor = aColor;\n"
 		"}\0";
 
 	const char* fragmentShaderSource = "#version 330 core\n"
 		"out vec4 FragColor;\n"
-		"uniform vec4 ourColor;\n"
+		"in vec3 ourColor;\n"
 		"void main()\n"
 		"{\n"
-		"    FragColor = ourColor;"
+		"    FragColor = vec4(ourColor, 1.0);\n"
 		"}\0";
 
 	// vertex shader
@@ -81,17 +84,18 @@ static void drawInitialize()
 	// prepare our vertex data
 	const float vertexData[] =
 	{
-		0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
+		// vertex				color
+		0.5f,	0.5f,	0.0f,	0.0f,	1.0f, 0.0f, // right-up		0
+		0.5f,	-0.5f,	0.0f,	1.0f,	0.0f, 0.0f, // right-down	1
+		-0.5f,	-0.5f,	0.0f,	0.0f,	1.0f, 1.0f,	// left-down	2
+		-0.5f,	0.5f,	0.0f,	0.0f,	0.0f, 1.0f	// left-up		3
 	};
 
 	// prepare our indices data
 	const uint32_t indices[] =
 	{
 		0,1,3,	// first triangle
-		1,2,3	// last
+		1,3,2	// last
 	};
 
 	// create VAO
@@ -114,17 +118,16 @@ static void drawInitialize()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// set vertex attrib pointer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// vertex position attrib
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	// vertex color attrib
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 }
 
 static void draw()
 {
-	// update color
-	float red = (sin(glfwGetTime()) / 2.0f) + 0.5f;
-	int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-	glUniform4f(vertexColorLocation, red, 0.0f, 0.0f, 1.0f);
-
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
