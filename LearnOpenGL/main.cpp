@@ -154,6 +154,9 @@ static void mainLoop()
 	shaderInitialize();
 	drawInitialize();
 
+	// test
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
