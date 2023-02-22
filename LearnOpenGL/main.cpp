@@ -8,6 +8,7 @@
 static uint32_t vbo;
 static uint32_t vao;
 static uint32_t ebo;
+static uint32_t shaderProgram;
 
 static void shaderInitialize()
 {
@@ -20,9 +21,10 @@ static void shaderInitialize()
 
 	const char* fragmentShaderSource = "#version 330 core\n"
 		"out vec4 FragColor;\n"
+		"uniform vec4 ourColor;\n"
 		"void main()\n"
 		"{\n"
-		"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+		"    FragColor = ourColor;"
 		"}\0";
 
 	// vertex shader
@@ -58,7 +60,7 @@ static void shaderInitialize()
 	}
 
 	// link to shader program
-	uint32_t shaderProgram = glCreateProgram();
+	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
@@ -118,6 +120,11 @@ static void drawInitialize()
 
 static void draw()
 {
+	// update color
+	float red = (sin(glfwGetTime()) / 2.0f) + 0.5f;
+	int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+	glUniform4f(vertexColorLocation, red, 0.0f, 0.0f, 1.0f);
+
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
