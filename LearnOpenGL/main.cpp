@@ -7,6 +7,7 @@
 
 static uint32_t vbo;
 static uint32_t vao;
+static uint32_t ebo;
 
 static void shaderInitialize()
 {
@@ -78,10 +79,23 @@ static void drawInitialize()
 	// prepare our vertex data
 	const float vertexData[] =
 	{
-		0.5f,0.5f,0.0f,
-		0.5f,-0.5f,0.0f,
-		-0.5f,0.0f,0.0f
+		0.5f, 0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f
 	};
+
+	// prepare our indices data
+	const uint32_t indices[] =
+	{
+		0,1,3,	// first triangle
+		1,2,3	// last
+	};
+
+	// create VAO
+	glGenVertexArrays(1, &vao);
+	// bind VAO
+	glBindVertexArray(vao);
 
 	// create VBO
 	glGenBuffers(1, &vbo);
@@ -90,10 +104,13 @@ static void drawInitialize()
 	// copy vertex data to memory (VBO)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-	// create VAO
-	glGenVertexArrays(1, &vao);
-	// bind VAO
-	glBindVertexArray(vao);
+	// create EBO
+	glGenBuffers(1, &ebo);
+	// bind EBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	// copy indices data to memory (EBO)
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	// set vertex attrib pointer
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -102,7 +119,8 @@ static void drawInitialize()
 static void draw()
 {
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 // ---------------------------------------------------
