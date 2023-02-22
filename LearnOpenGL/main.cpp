@@ -16,9 +16,10 @@ static void shaderInitialize()
 		"layout (location = 0) in vec3 aPos;\n"
 		"layout (location = 1) in vec3 aColor;\n"
 		"out vec3 ourColor;\n"
+		"uniform vec2 xyoffset;"
 		"void main()\n"
 		"{\n"
-		"    gl_Position = vec4(aPos,1.0);\n"
+		"    gl_Position = vec4(aPos.x + xyoffset.x,aPos.y + xyoffset.y,aPos.z,1.0);\n"
 		"    ourColor = aColor;\n"
 		"}\0";
 
@@ -128,6 +129,10 @@ static void drawInitialize()
 
 static void draw()
 {
+	// update uniform
+	int vertexColorLocation = glGetUniformLocation(shaderProgram, "xyoffset");
+	glUniform2f(vertexColorLocation, sin(glfwGetTime()), cos(glfwGetTime()));
+
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
