@@ -142,13 +142,19 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Programming-Libs\cpp\glad_opengl3.3_core\src\glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="fragmentshader.glsl" />
+    <None Include="vertexshader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="idk.png" />
     <Image Include="idk1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shader.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

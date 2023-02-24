@@ -5,7 +5,9 @@
 #include <GLFW/glfw3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image.h>
+
+#include "shader.hpp"
 
 // ---------------------------------------------------
 
@@ -46,89 +48,13 @@ static void loadTexture()
 static uint32_t vbo;
 static uint32_t vao;
 static uint32_t ebo;
-static uint32_t shaderProgram;
+
+static flat::Shader shader;
 
 static void shaderInitialize()
 {
-	const char* vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"layout (location = 1) in vec3 aColor;\n"
-		"layout (location = 2) in vec2 aTexCoord;\n"
-		"out vec3 ourColor;\n"
-		"out vec2 TexCoord;\n"
-		"out vec4 ourPos;\n"
-		"uniform vec2 xyoffset;"
-		"void main()\n"
-		"{\n"
-		"    gl_Position = vec4(aPos.x + (xyoffset.x / 2),aPos.y + (xyoffset.y / 2),aPos.z,1.0);\n"
-		"    ourPos = gl_Position;\n"
-		"    ourColor = aColor;\n"
-		"    TexCoord = aTexCoord;\n"
-		"}\0";
-
-	const char* fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"in vec3 ourColor;\n"
-		"in vec4 ourPos;\n"
-		"in vec2 TexCoord;\n"
-		"uniform sampler2D texture0;\n"
-		"uniform sampler2D texture1;\n"
-		"void main()\n"
-		"{\n"
-		"    FragColor = mix(texture(texture0,TexCoord),texture(texture1,TexCoord),0.5) * vec4(ourColor.x - (ourPos.x / 2.0),ourColor.y - (ourPos.y / 2.0),ourColor.z - (ourPos.z / 1.5), 0.1);\n"
-		"}\0";
-
-	// vertex shader
-	uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
-
-	// check vertex shader
-	int  vertexShaderSuccess;
-	char vertexShaderInfoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vertexShaderSuccess);
-	if (!vertexShaderSuccess)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, vertexShaderInfoLog);
-		std::cout << "[ERROR] Can't compile vertex shader: \n" << vertexShaderInfoLog << std::endl;
-		abort();
-	}
-
-	// fragment shader
-	uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-	glCompileShader(fragmentShader);
-
-	// check fragment shader
-	int  fragmentxShaderSuccess;
-	char fragmentShaderInfoLog[512];
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentxShaderSuccess);
-	if (!fragmentxShaderSuccess)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, fragmentShaderInfoLog);
-		std::cout << "[ERROR] Can't compile fragment shader: \n" << fragmentShaderInfoLog << std::endl;
-		abort();
-	}
-
-	// link to shader program
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// start shader program
-	glUseProgram(shaderProgram);
-
-	// bind GL_TEXTUREx
-	glUniform1i(glGetUniformLocation(shaderProgram, "texture0"), 0);// "texture0" -> GL_TEXTURE0
-	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 1);// "texture1" -> GL_TEXTURE1
-
-	// delete vertexShader & fragmentShader
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	// if you wanna to delete the shader program
-	// glDeleteShader(...);
+	shader.load("vertexshader.glsl", "fragmentshader.glsl");
+	shader.use();
 }
 
 static void drawInitialize()
@@ -184,7 +110,7 @@ static void drawInitialize()
 static void draw()
 {
 	// update uniform
-	int vertexColorLocation = glGetUniformLocation(shaderProgram, "xyoffset");
+	int vertexColorLocation = glGetUniformLocation(shader.getShaderProgram(), "xyoffset");
 	glUniform2f(vertexColorLocation, sin(glfwGetTime()), cos(glfwGetTime()));
 
 	glActiveTexture(GL_TEXTURE0);
