@@ -87,6 +87,8 @@ void flat::Shader::checkFragmentShader(uint32_t fshaderProgram)
 void flat::Shader::use()
 {
 	glUseProgram(shaderProgram);
+	glUniform1i(glGetUniformLocation(shaderProgram, "texture0"), 0);// "texture0" -> GL_TEXTURE0
+	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 1);// "texture1" -> GL_TEXTURE1
 }
 
 template <typename T>
@@ -183,7 +185,4 @@ void flat::Shader::load(const char* vshaderPath, const char* fshaderPath)
 	}
 
 	shaderProgram = makeShaderProgram(vshaderBuffer, fshaderbuffer);
-
-	glUniform1i(glGetUniformLocation(shaderProgram, "texture0"), 0);// "texture0" -> GL_TEXTURE0
-	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 1);// "texture1" -> GL_TEXTURE1
 }
