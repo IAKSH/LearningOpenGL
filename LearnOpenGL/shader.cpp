@@ -6,7 +6,7 @@
 
 #include <glad/glad.h>
 
-flat::Shader::Shader(const char* vshaderPath, const char* fshaderPath)
+flat::Shader::Shader(std::string_view vshaderPath, std::string_view fshaderPath)
 {
 	load(vshaderPath, fshaderPath);
 }
@@ -92,7 +92,7 @@ void flat::Shader::use()
 }
 
 template <typename T>
-void flat::Shader::writeUniform(std::string_view uniform, std::initializer_list<T> vals)
+void flat::Shader::write(std::string_view uniform, std::initializer_list<T> vals)
 {
 	/*
 	using location = glGetUniformLocation(shaderProgram, &uniform.at(0));
@@ -164,10 +164,10 @@ void flat::Shader::writeUniform(std::string_view uniform, std::initializer_list<
 	*/
 }
 
-void flat::Shader::load(const char* vshaderPath, const char* fshaderPath)
+void flat::Shader::load(std::string_view vshaderPath, std::string_view fshaderPath)
 {
 	std::string vshaderBuffer, fshaderbuffer, readinBuffer;
-	std::ifstream ifs(vshaderPath, std::ios::in);
+	std::ifstream ifs(&vshaderPath.at(0), std::ios::in);
 	while (!ifs.eof())
 	{
 		std::getline(ifs, readinBuffer);
@@ -177,7 +177,7 @@ void flat::Shader::load(const char* vshaderPath, const char* fshaderPath)
 	readinBuffer = "";
 	ifs.close();
 
-	ifs.open(fshaderPath, std::ios::in);
+	ifs.open(&fshaderPath.at(0), std::ios::in);
 	while (!ifs.eof())
 	{
 		std::getline(ifs, readinBuffer);

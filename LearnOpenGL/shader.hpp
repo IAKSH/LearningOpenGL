@@ -41,17 +41,17 @@ namespace flat
 		void checkFragmentShader(uint32_t fshaderProgram);
 
 	public:
-		Shader(const char* vshaderPath,const char* fshaderPath);
+		Shader(std::string_view vshaderPath, std::string_view fshaderPath);
 		Shader();
 		~Shader();
 
-		void load(const char* vshaderPath, const char* fshaderPath);
+		void load(std::string_view vshaderPath, std::string_view fshaderPath);
 		void use();
 		template <typename T>
-		void writeUniform(std::string_view uniform, std::initializer_list<T> vals);
+		void write(std::string_view uniform, std::initializer_list<T> vals);
 		//void drawObject();
-		
-		// DEBUG ONLY!
+
+		// DEBUG ONLY
 		uint32_t getShaderProgram()
 		{
 			return shaderProgram;
