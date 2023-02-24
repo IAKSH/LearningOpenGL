@@ -50,11 +50,5 @@ namespace flat
 		template <typename T>
 		void write(std::string_view uniform, std::initializer_list<T> vals);
 		//void drawObject();
-
-		// DEBUG ONLY
-		uint32_t getShaderProgram()
-		{
-			return shaderProgram;
-		}
 	};
 }

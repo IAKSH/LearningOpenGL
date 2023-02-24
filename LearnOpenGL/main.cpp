@@ -110,8 +110,9 @@ static void drawInitialize()
 static void draw()
 {
 	// update uniform
-	int vertexColorLocation = glGetUniformLocation(shader.getShaderProgram(), "xyoffset");
-	glUniform2f(vertexColorLocation, sin(glfwGetTime()), cos(glfwGetTime()));
+	//int vertexColorLocation = glGetUniformLocation(shader.getShaderProgram(), "xyoffset");
+	//glUniform2f(vertexColorLocation, sin(glfwGetTime()), cos(glfwGetTime()));
+	shader.write("xyoffset", { sin(glfwGetTime()) ,cos(glfwGetTime()) });
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
