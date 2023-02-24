@@ -75,7 +75,7 @@ static void shaderInitialize()
 		"uniform sampler2D texture1;\n"
 		"void main()\n"
 		"{\n"
-		"    FragColor = mix(texture(texture0,TexCoord),texture(texture1,TexCoord),0.5);\n"
+		"    FragColor = mix(texture(texture0,TexCoord),texture(texture1,TexCoord),0.5) * vec4(ourColor.x - (ourPos.x / 2.0),ourColor.y - (ourPos.y / 2.0),ourColor.z - (ourPos.z / 1.5), 0.1);\n"
 		"}\0";
 
 	// vertex shader
