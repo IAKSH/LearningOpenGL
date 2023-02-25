@@ -2,10 +2,11 @@
 
 #include <string_view>
 #include <cinttypes>
+#include <concepts>
 #include <iostream>
 #include <fstream>
+#include <format>
 #include <string>
-#include <vector>
 
 #include <glad/glad.h>
 
@@ -34,6 +35,8 @@ namespace flat
 	};
 	*/
 
+	template <typename T> concept AnyInitializerList = requires {typename std::initializer_list<T>; };
+
 	class Shader
 	{
 	private:
@@ -54,83 +57,75 @@ namespace flat
 		void use();
 		//void drawObject();
 
-		template <typename T, typename... Args>
-		void write(std::string_view uniform, T val, Args... args)
+		template <AnyInitializerList T>
+		void write(std::string_view uniform, T vals) 
 		{
-			std::vector<T> buffer(val);
-
-			auto func = [&](T fist) {return; };
-			auto func = [&](T fist, Args... args)
-			{
-				buffer.push_back(fist);
-				func(args);
-			};
-
 			auto location = glGetUniformLocation(shaderProgram, &uniform.at(0));
+			auto printErrorUnknowSize = ()[] {std::cerr << std::format("[ERROR] flat::Shader::write {with T as {}): unknow size of para", typeid(T).name()) << std::endl; };
 
-			if (typeid(T) == typeid(int))
+			if (typeid(T) == typeid(std::initializer_list<int>))
 			{
-				switch (buffer.size())
+				auto list = dynamic_cast<std::initializer_list<int>*>(vals);
+
+				int len = 0;
+				for (auto& item : list) ++len;
+
+				switch (len)
 				{
 				case 1:
-					glUniform1i(location, buffer[0]);
-					break;
+					glUniform1i(location, *(&*list->begin()));
 				case 2:
-					glUniform2i(location, buffer[0], buffer[1]);
-					break;
+					glUniform2i(location, *(&*list->begin()), *(&*list->begin() + 1));
 				case 3:
-					glUniform3i(location, buffer[0], buffer[1], buffer[2]);
-					break;
+					glUniform3i(location, *(&*list->begin()), *(&*list->begin() + 1), *(&*list->begin() + 2));
 				case 4:
-					glUniform4i(location, buffer[0], buffer[1], buffer[2], buffer[3]);
-					break;
+					glUniform4i(location, *(&*list->begin()), *(&*list->begin() + 1), *(&*list->begin() + 2), *(&*list->begin() + 3));
 				default:
-					std::cerr << "[ERROR] flat::Shader::write | too many parameter! (int)" << std::endl;
-					abort();
+					printErrorUnknowSize();
 					break;
 				}
 			}
-			else if (typeid(T) == typeid(unsigned int))
+			else if (typeid(T) == typeid(std::initializer_list<unsigned int>))
 			{
-				switch (buffer.size())
+				using list = vals;
+
+				int len = 0;
+				for (auto& item : list) ++len;
+
+				switch (len)
 				{
 				case 1:
-					glUniform1ui(location, buffer[0]);
-					break;
+					glUniform1ui(location, *(&*list.begin()));
 				case 2:
-					glUniform2ui(location, buffer[0], buffer[1]);
-					break;
+					glUniform2ui(location, *(&*list.begin()), *(&*list.begin() + 1));
 				case 3:
-					glUniform3ui(location, buffer[0], buffer[1], buffer[2]);
-					break;
+					glUniform3ui(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2));
 				case 4:
-					glUniform4ui(location, buffer[0], buffer[1], buffer[2], buffer[3]);
-					break;
+					glUniform4ui(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2), *(&*list.begin() + 3));
 				default:
-					std::cerr << "[ERROR] flat::Shader::write | too many parameter! (unsigned int)" << std::endl;
-					abort();
+					printErrorUnknowSize();
 					break;
 				}
 			}
-			else if (typeid(T) == typeid(float))
+			else if (typeid(T) == typeid(std::initializer_list<float>))
 			{
-				switch (buffer.size())
+				using list = vals;
+
+				int len = 0;
+				for (auto& item : list) ++len;
+
+				switch (len)
 				{
 				case 1:
-					glUniform1f(location, buffer[0]);
-					break;
+					glUniform1f(location, *(&*list.begin()));
 				case 2:
-					glUniform2f(location, buffer[0], buffer[1]);
-					break;
+					glUniform2f(location, *(&*list.begin()), *(&*list.begin() + 1));
 				case 3:
-					glUniform3f(location, buffer[0], buffer[1], buffer[2]);
-					break;
+					glUniform3f(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2));
 				case 4:
-					glUniform4f(location, buffer[0], buffer[1], buffer[2], buffer[3]);
-					break;
+					glUniform4f(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2), *(&*list.begin() + 3));
 				default:
-					std::cerr << "[ERROR] flat::Shader::write | too many parameter! (float)" << std::endl;
-					abort();
+					printErrorUnknowSize();
 					break;
 				}
 			}
