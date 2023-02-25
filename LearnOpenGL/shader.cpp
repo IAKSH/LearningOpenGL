@@ -107,3 +107,81 @@ void flat::Shader::load(std::string_view vshaderPath, std::string_view fshaderPa
 
 	shaderProgram = makeShaderProgram(vshaderBuffer, fshaderbuffer);
 }
+
+void flat::Shader::write(std::string_view uniform, std::initializer_list<int>&& val)
+{
+	auto location = glGetUniformLocation(shaderProgram, uniform.data());
+	int len = 0;
+	for (auto& item : val) len++;
+
+	switch (len)
+	{
+	case 1:
+		glUniform1i(location, *val.begin());
+		break;
+	case 2:
+		glUniform2i(location, *val.begin(), *(val.begin() + 1));
+		break;
+	case 3:
+		glUniform3i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+		break;
+	case 4:
+		glUniform4i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+		break;
+	default:
+		std::cerr << std::format("[ERROR] flat::Shader::writeUniformInt | too many/few parameter (int * {}", len) << std::endl;
+		abort();
+	}
+}
+
+void flat::Shader::write(std::string_view uniform, std::initializer_list<unsigned int>&& val)
+{
+	auto location = glGetUniformLocation(shaderProgram, uniform.data());
+	int len = 0;
+	for (auto& item : val) len++;
+
+	switch (len)
+	{
+	case 1:
+		glUniform1ui(location, *val.begin());
+		break;
+	case 2:
+		glUniform2ui(location, *val.begin(), *(val.begin() + 1));
+		break;
+	case 3:
+		glUniform3ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+		break;
+	case 4:
+		glUniform4ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+		break;
+	default:
+		std::cerr << std::format("[ERROR] flat::Shader::writeUniformInt | too many/few parameter (unsgined int * {}", len) << std::endl;
+		abort();
+	}
+}
+
+void flat::Shader::write(std::string_view uniform, std::initializer_list<float>&& val)
+{
+	auto location = glGetUniformLocation(shaderProgram, uniform.data());
+	int len = 0;
+	for (auto& item : val) len++;
+
+	switch (len)
+	{
+	case 1:
+		glUniform1f(location, *val.begin());
+		break;
+	case 2:
+		glUniform2f(location, *val.begin(), *(val.begin() + 1));
+		break;
+	case 3:
+		glUniform3f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+		break;
+	case 4:
+		glUniform4f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+		break;
+	default:
+		std::cerr << std::format("[ERROR] flat::Shader::writeUniformInt | too many/few parameter (float * {}", len) << std::endl;
+		abort();
+	}
+}
