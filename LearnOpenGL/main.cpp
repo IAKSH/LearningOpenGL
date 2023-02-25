@@ -110,8 +110,6 @@ static void drawInitialize()
 static void draw()
 {
 	// update uniform
-	//int vertexColorLocation = glGetUniformLocation(shader.getShaderProgram(), "xyoffset");
-	//glUniform2f(vertexColorLocation, sin(glfwGetTime()), cos(glfwGetTime()));
 	shader.write("xyoffset", std::initializer_list<float>{ static_cast<float>(sin(glfwGetTime())), static_cast<float>(cos(glfwGetTime())) });
 
 	glActiveTexture(GL_TEXTURE0);
