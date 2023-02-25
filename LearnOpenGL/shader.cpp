@@ -1,12 +1,5 @@
 #include "shader.hpp"
 
-#include <functional>
-#include <iostream>
-#include <fstream>
-#include <string>
-
-#include <glad/glad.h>
-
 flat::Shader::Shader(std::string_view vshaderPath, std::string_view fshaderPath)
 {
 	load(vshaderPath, fshaderPath);
@@ -90,85 +83,6 @@ void flat::Shader::use()
 	glUseProgram(shaderProgram);
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture0"), 0);// "texture0" -> GL_TEXTURE0
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 1);// "texture1" -> GL_TEXTURE1
-}
-
-// For some reason, can not find this func when link [with T as float]
-template <typename T>
-void flat::Shader::write(std::string_view uniform, std::initializer_list<T> vals)
-{
-	auto location = glGetUniformLocation(shaderProgram, &uniform.at(0));
-
-	if (typeid(T) == typeid(int))
-	{
-		switch (vals.size())
-		{
-		case 1:
-			glUniform1i(location, vals[0]);
-			break;
-		case 2:
-			glUniform2i(location, vals[0], vals[1]);
-			break;
-		case 3:
-			glUniform3i(location, vals[0], vals[1], vals[2]);
-			break;
-		case 4:
-			glUniform4i(location, vals[0], vals[1], vals[2], vals[3]);
-			break;
-		default:
-			std::cerr << "[ERROR] flat::Shader::write | too many parameter! (int)" << std::endl;
-			abort();
-			break;
-		}
-	}
-	else if (typeid(T) == typeid(unsigned int))
-	{
-		switch (vals.size())
-		{
-		case 1:
-			glUniform1ui(location, vals[0]);
-			break;
-		case 2:
-			glUniform2ui(location, vals[0], vals[1]);
-			break;
-		case 3:
-			glUniform3ui(location, vals[0], vals[1], vals[2]);
-			break;
-		case 4:
-			glUniform4ui(location, vals[0], vals[1], vals[2], vals[3]);
-			break;
-		default:
-			std::cerr << "[ERROR] flat::Shader::write | too many parameter! (unsigned int)" << std::endl;
-			abort();
-			break;
-		}
-	}
-	else if (typeid(T) == typeid(float))
-	{
-		switch (vals.size())
-		{
-		case 1:
-			glUniform1f(location, vals[0]);
-			break;
-		case 2:
-			glUniform2f(location, vals[0], vals[1]);
-			break;
-		case 3:
-			glUniform3f(location, vals[0], vals[1], vals[2]);
-			break;
-		case 4:
-			glUniform4f(location, vals[0], vals[1], vals[2], vals[3]);
-			break;
-		default:
-			std::cerr << "[ERROR] flat::Shader::write | too many parameter! (float)" << std::endl;
-			abort();
-			break;
-		}
-	}
-	else
-	{
-		std::cerr << "[ERROR] flat::Shader::write | Unknow typeid: name = " << typeid(T).name() << std::endl;
-		abort();
-	}
 }
 
 void flat::Shader::load(std::string_view vshaderPath, std::string_view fshaderPath)
