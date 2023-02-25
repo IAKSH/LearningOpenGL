@@ -7,6 +7,7 @@
 #include <fstream>
 #include <format>
 #include <string>
+#include <array>
 
 #include <glad/glad.h>
 
@@ -35,7 +36,7 @@ namespace flat
 	};
 	*/
 
-	template <typename T> concept AnyInitializerList = requires {typename std::initializer_list<T>; };
+	template <typename T> concept AnyInitializerList = requires{ typename std::initializer_list<T>; };
 
 	class Shader
 	{
@@ -55,85 +56,65 @@ namespace flat
 
 		void load(std::string_view vshaderPath, std::string_view fshaderPath);
 		void use();
-		//void drawObject();
 
-		template <AnyInitializerList T>
-		void write(std::string_view uniform, T vals) 
+		template <typename T,int n>
+		void write(std::string_view uniform, T val) requires AnyInitializerList<T>
 		{
-			auto location = glGetUniformLocation(shaderProgram, &uniform.at(0));
-			auto printErrorUnknowSize = ()[] {std::cerr << std::format("[ERROR] flat::Shader::write {with T as {}): unknow size of para", typeid(T).name()) << std::endl; };
+			using location = glGetUniformLocation(shaderProgram, &uniform.at(0));
+			auto onError = []() {std::cerr << std::format("[ERROR] flat::Shader::write::handler1 | unknow type: typeid(val).name() = {}", typeid(T).name()) << std::endl; abort(); };
 
-			if (typeid(T) == typeid(std::initializer_list<int>))
+			auto handler1 = [&]()
 			{
-				auto list = dynamic_cast<std::initializer_list<int>*>(vals);
+				if (typeid(val) == typeid(std::initializer_list<int>))
+					glUniform1i(location, *val.begin());
+				else if (typeid(val) == typeid(std::initializer_list<unsigned int>))
+					glUniform1ui(location, *val.begin());
+				else if (typeid(val) == typeid(std::initializer_list<float>))
+					glUniform1f(location, *val.begin());
+				else
+					onError();
+			};
 
-				int len = 0;
-				for (auto& item : list) ++len;
-
-				switch (len)
-				{
-				case 1:
-					glUniform1i(location, *(&*list->begin()));
-				case 2:
-					glUniform2i(location, *(&*list->begin()), *(&*list->begin() + 1));
-				case 3:
-					glUniform3i(location, *(&*list->begin()), *(&*list->begin() + 1), *(&*list->begin() + 2));
-				case 4:
-					glUniform4i(location, *(&*list->begin()), *(&*list->begin() + 1), *(&*list->begin() + 2), *(&*list->begin() + 3));
-				default:
-					printErrorUnknowSize();
-					break;
-				}
-			}
-			else if (typeid(T) == typeid(std::initializer_list<unsigned int>))
+			auto handler2 = [&]()
 			{
-				using list = vals;
+				if (typeid(val) == typeid(std::initializer_list<int>))
+					glUniform2i(location, *val.begin(), *(val.begin() + 1));
+				else if (typeid(val) == typeid(std::initializer_list<unsigned int>))
+					glUniform2ui(location, *val.begin(), *(val.begin() + 1));
+				else if (typeid(val) == typeid(std::initializer_list<float>))
+					glUniform2f(location, *val.begin(), *(val.begin() + 1));
+				else
+					onError();
+			};
 
-				int len = 0;
-				for (auto& item : list) ++len;
-
-				switch (len)
-				{
-				case 1:
-					glUniform1ui(location, *(&*list.begin()));
-				case 2:
-					glUniform2ui(location, *(&*list.begin()), *(&*list.begin() + 1));
-				case 3:
-					glUniform3ui(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2));
-				case 4:
-					glUniform4ui(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2), *(&*list.begin() + 3));
-				default:
-					printErrorUnknowSize();
-					break;
-				}
-			}
-			else if (typeid(T) == typeid(std::initializer_list<float>))
+			auto handler3 = [&]()
 			{
-				using list = vals;
+				if (typeid(val) == typeid(std::initializer_list<int>))
+					glUniform3i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+				else if (typeid(val) == typeid(std::initializer_list<unsigned int>))
+					glUniform3ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+				else if (typeid(val) == typeid(std::initializer_list<float>))
+					glUniform3f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+				else
+					onError();
+			};
 
-				int len = 0;
-				for (auto& item : list) ++len;
-
-				switch (len)
-				{
-				case 1:
-					glUniform1f(location, *(&*list.begin()));
-				case 2:
-					glUniform2f(location, *(&*list.begin()), *(&*list.begin() + 1));
-				case 3:
-					glUniform3f(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2));
-				case 4:
-					glUniform4f(location, *(&*list.begin()), *(&*list.begin() + 1), *(&*list.begin() + 2), *(&*list.begin() + 3));
-				default:
-					printErrorUnknowSize();
-					break;
-				}
-			}
-			else
+			auto handler4 = [&]()
 			{
-				std::cerr << "[ERROR] flat::Shader::write | Unknow typeid: name = " << typeid(T).name() << std::endl;
-				abort();
-			}
+				if (typeid(val) == typeid(std::initializer_list<int>))
+					glUniform4i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+				else if (typeid(val) == typeid(std::initializer_list<unsigned int>))
+					glUniform4ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+				else if (typeid(val) == typeid(std::initializer_list<float>))
+					glUniform4f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+				else
+					onError();
+			};
+
+			//...
+
 		}
+
+		//void drawObject();
 	};
 }
