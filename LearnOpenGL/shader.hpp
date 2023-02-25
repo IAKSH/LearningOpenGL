@@ -113,5 +113,11 @@ namespace flat
 		}
 
 		//void drawObject();
+
+		// for test only..
+		uint32_t getShaderProgram()
+		{
+			return shaderProgram;
+		}
 	};
 }
