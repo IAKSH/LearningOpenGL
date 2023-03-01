@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Programming-Libs\cpp\glad_opengl3.3_core\src\glad.c" />
+    <ClCompile Include="drawable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <Image Include="idk1.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="drawable.hpp" />
     <ClInclude Include="shader.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

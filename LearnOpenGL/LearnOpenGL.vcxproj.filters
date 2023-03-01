@@ -24,6 +24,9 @@
     <ClCompile Include="shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="drawable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
@@ -44,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="drawable.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

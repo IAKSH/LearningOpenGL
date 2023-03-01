@@ -12,6 +12,7 @@
 #include <stb_image.h>
 
 #include "shader.hpp"
+#include "drawable.hpp"
 
 // ---------------------------------------------------
 
@@ -49,9 +50,6 @@ static void loadTexture()
 
 // ---------------------------------------------------
 
-static uint32_t vbo;
-static uint32_t vao;
-static uint32_t ebo;
 
 static flat::Shader shader;
 
@@ -61,54 +59,15 @@ static void shaderInitialize()
 	shader.use();
 }
 
+flat::Drawable meme;
+
 static void drawInitialize()
 {
-	// prepare our vertex data
-	const float vertexData[] =
-	{
-		// vertex				color					texCoord
-		0.5f,	0.5f,	0.0f,	0.0f,	1.0f, 0.0f,		1.0f,1.0f,	// right-up		0
-		0.5f,	-0.5f,	0.0f,	1.0f,	0.0f, 0.0f,		1.0f,0.0f,	// right-down	1
-		-0.5f,	-0.5f,	0.0f,	0.0f,	1.0f, 1.0f,		0.0f,0.0f,	// left-down	2
-		-0.5f,	0.5f,	0.0f,	0.0f,	0.0f, 1.0f,		0.0f,1.0f	// left-up		3
-	};
 
-	// prepare our indices data
-	const uint32_t indices[] =
-	{
-		0,1,3,	// first triangle
-		1,3,2	// last
-	};
-
-	// create VAO
-	glGenVertexArrays(1, &vao);
-	// bind VAO
-	glBindVertexArray(vao);
-
-	// create VBO
-	glGenBuffers(1, &vbo);
-	// bind VBO
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// copy vertex data to memory (VBO)
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-
-	// create EBO
-	glGenBuffers(1, &ebo);
-	// bind EBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	// copy indices data to memory (EBO)
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// set vertex attrib pointer
-	// vertex position attrib
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	// vertex color attrib
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// texture coord attrib
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	meme.writeVertexes({ 0.5f,0.5f,0.0f,0.5f,-0.5f,0.0f,-0.5f,-0.5f,0.0f,-0.5f,0.5f,0.0f });
+	meme.writeColors({ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f });
+	meme.writeTexCoord({ 1.0f,1.0f, 1.0f,0.0f ,0.0f,0.0f,0.0f,1.0f });
+	meme.make();
 }
 
 static void draw()
@@ -127,9 +86,7 @@ static void draw()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	meme.draw();
 }
 
 // ---------------------------------------------------
