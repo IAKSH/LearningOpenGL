@@ -70,10 +70,10 @@ void flat::Animation::load(std::initializer_list<std::string_view>&& pathes)
 
 void flat::Animation::checkUpdate()
 {
-	auto nowMS = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lastUpdate).count() >= intervalMS)
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastUpdate).count() >= intervalMS)
 	{
-		if (currentIndice + 1 == textures.size())
+		lastUpdate = std::chrono::steady_clock::now();
+		if (currentIndice + 01 == textures.size())
 			currentIndice = 0;
 		else
 			++currentIndice;
