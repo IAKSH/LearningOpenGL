@@ -11,9 +11,9 @@ namespace flat
 	{
 	private:
 		std::deque<uint32_t> textures;
-		uint32_t intervalMS;
+		uint32_t intervalMS = 1000;
 		std::chrono::steady_clock::time_point lastUpdate;
-		uint32_t currentIndice;
+		uint32_t currentIndice = 0;
 	public:
 		Animation();
 		Animation(std::initializer_list<std::string_view>&& pathes);
