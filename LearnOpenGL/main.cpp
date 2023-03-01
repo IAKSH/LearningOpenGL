@@ -60,6 +60,7 @@ static void shaderInitialize()
 }
 
 flat::Drawable meme;
+flat::Drawable meme2;
 
 static void drawInitialize()
 {
@@ -68,6 +69,11 @@ static void drawInitialize()
 	meme.writeColors({ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f });
 	meme.writeTexCoord({ 1.0f,1.0f, 1.0f,0.0f ,0.0f,0.0f,0.0f,1.0f });
 	meme.make();
+
+	meme2.writeVertexes({ 1.0f,1.0f,0.0f,0.0f,-0.36f,0.0f,-0.5f,-0.5f,0.0f,-0.5f,0.5f,0.0f });
+	meme2.writeColors({ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f });
+	meme2.writeTexCoord({ 1.0f,1.0f, 1.0f,0.0f ,0.0f,0.0f,0.0f,1.0f });
+	meme2.make();
 }
 
 static void draw()
@@ -87,6 +93,7 @@ static void draw()
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 
 	meme.draw();
+	meme2.draw();
 }
 
 // ---------------------------------------------------
