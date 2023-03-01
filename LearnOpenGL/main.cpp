@@ -8,50 +8,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include "shader.hpp"
 #include "drawable.hpp"
+#include "animation.hpp"
 
-// ---------------------------------------------------
+static flat::Shader shader;
 
-static uint32_t texture[2];
+flat::Animation ani;
 
 static void loadTexture()
 {
-	stbi_set_flip_vertically_on_load(true);
-
-	const char* path[2] = { "idk.png","idk1.png" };
-
-	glGenTextures(2, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	for (int i = 0; i < 2; i++)
-	{
-		int w, h, channels;
-		unsigned char* data = stbi_load(path[i], &w, &h, &channels, 0);
-		if (!data)
-		{
-			std::cerr << "[ERROR] Can't load " << path[i] << std::endl;
-			abort();
-		}
-
-		glBindTexture(GL_TEXTURE_2D, texture[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		stbi_image_free(data);
-	}
+	ani.load({ "idk.png","idk1.png" });
+	ani.setIntervalMS(1000);
 }
-
-// ---------------------------------------------------
-
-
-static flat::Shader shader;
 
 static void shaderInitialize()
 {
@@ -86,11 +55,12 @@ static void draw()
 	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 	glUniformMatrix4fv(glGetUniformLocation(shader.getShaderProgram(), "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 
+	ani.checkUpdate();
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, ani.getCurrentTexture());
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, ani.getCurrentTexture());
 
 	meme.draw();
 	meme2.draw();

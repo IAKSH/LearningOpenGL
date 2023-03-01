@@ -27,6 +27,9 @@
     <ClCompile Include="drawable.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
@@ -50,6 +53,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="drawable.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
