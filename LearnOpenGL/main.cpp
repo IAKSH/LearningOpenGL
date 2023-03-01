@@ -157,4 +157,6 @@ static void initializeGLFW()
 	}
 
 	glfwMakeContextCurrent(window);
+
+	glfwSwapInterval(3);
 }
