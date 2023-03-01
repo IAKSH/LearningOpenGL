@@ -53,7 +53,7 @@ namespace flat
 		void use();
 
 		template <typename T>
-		void write(std::string_view uniform, std::initializer_list<T>&& val)
+		void write(std::string_view uniform, std::initializer_list<T>&& vals)
 		{
 			static_assert(std::is_same<T,int>::value || std::is_same<T, unsigned int>::value || std::is_same<T, float>::value);
 
@@ -61,48 +61,48 @@ namespace flat
 
 			auto location = glGetUniformLocation(shaderProgram, uniform.data());
 			int len = 0;
-			for (auto& item : val)
+			for (auto& item : vals)
 				len++;
 
 			switch (len)
 			{
 			case 1:
 				if (std::is_same<T, int>::value)
-					glUniform1i(location, *val.begin());
+					glUniform1i(location, *vals.begin());
 				else if (std::is_same<T, unsigned int>::value)
-					glUniform1ui(location, *val.begin());
+					glUniform1ui(location, *vals.begin());
 				else if (std::is_same<T, float>::value)
-					glUniform1f(location, *val.begin());
+					glUniform1f(location, *vals.begin());
 				else
 					reportTypeError();
 				break;
 			case 2:
 				if (std::is_same<T, int>::value)
-					glUniform2i(location, *val.begin(), *(val.begin() + 1));
+					glUniform2i(location, *vals.begin(), *(vals.begin() + 1));
 				else if (std::is_same<T, unsigned int>::value)
-					glUniform2ui(location, *val.begin(), *(val.begin() + 1));
+					glUniform2ui(location, *vals.begin(), *(vals.begin() + 1));
 				else if (std::is_same<T, float>::value)
-					glUniform2f(location, *val.begin(), *(val.begin() + 1));
+					glUniform2f(location, *vals.begin(), *(vals.begin() + 1));
 				else
 					reportTypeError();
 				break;
 			case 3:
 				if (std::is_same<T, int>::value)
-					glUniform3i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+					glUniform3i(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2));
 				else if (std::is_same<T, unsigned int>::value)
-					glUniform3ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+					glUniform3ui(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2));
 				else if (std::is_same<T, float>::value)
-					glUniform3f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2));
+					glUniform3f(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2));
 				else
 					reportTypeError();
 				break;
 			case 4:
 				if (std::is_same<T, int>::value)
-					glUniform4i(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+					glUniform4i(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2), *(vals.begin() + 3));
 				else if (std::is_same<T, unsigned int>::value)
-					glUniform4ui(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+					glUniform4ui(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2), *(vals.begin() + 3));
 				else if (std::is_same<T, float>::value)
-					glUniform4f(location, *val.begin(), *(val.begin() + 1), *(val.begin() + 2), *(val.begin() + 3));
+					glUniform4f(location, *vals.begin(), *(vals.begin() + 1), *(vals.begin() + 2), *(vals.begin() + 3));
 				else
 					reportTypeError();
 				break;

@@ -114,7 +114,7 @@ static void drawInitialize()
 static void draw()
 {
 	// update uniform
-	shader.write("xyoffset", std::initializer_list<float>{ static_cast<float>(sin(glfwGetTime())), static_cast<float>(cos(glfwGetTime())) });
+	shader.write("xyoffset", { static_cast<float>(sin(glfwGetTime())), static_cast<float>(cos(glfwGetTime())) });
 	// transform!!!
 	glm::mat4 trans(1.0f);
 	//trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
