@@ -1,8 +1,9 @@
-#include "gameplay.h"
+#include "gameplay.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "gameplay.hpp"
 
 void flat::Gameplay::initializeTexture()
 {
@@ -55,6 +56,11 @@ void flat::Gameplay::initializeGLAD()
 		std::cerr << "[ERROR] Can't initialize GLAD" << std::endl;
 		abort();
 	}
+}
+
+void flat::Gameplay::bindFramebufferSizeCallback()
+{
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {glViewport(0, 0, width, height); });
 }
 
 void flat::Gameplay::draw()
@@ -118,6 +124,7 @@ void flat::Gameplay::initialize()
 {
 	initializeGLFW();
 	initializeGLAD();
+	bindFramebufferSizeCallback();
 	initializeShader();
 	initializeDraw();
 	initializeTexture();

@@ -27,6 +27,7 @@ namespace flat
 		void initializeDraw();
 		void initializeGLFW();
 		void initializeGLAD();
+		void bindFramebufferSizeCallback();
 		void draw();
 	public:
 		Gameplay();

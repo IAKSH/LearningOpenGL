@@ -142,9 +142,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Programming-Libs\cpp\glad_opengl3.3_core\src\glad.c" />
     <ClCompile Include="drawable.cpp" />
+    <ClCompile Include="gameplay.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
@@ -156,7 +158,9 @@
     <Image Include="idk1.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="audio.hpp" />
     <ClInclude Include="drawable.hpp" />
+    <ClInclude Include="gameplay.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="animation.hpp" />
   </ItemGroup>
