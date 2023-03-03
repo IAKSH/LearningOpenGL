@@ -72,9 +72,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Programming-Libs\cpp\OpenAL1.1\include;D:\Programming-Libs\cpp\stb-master;D:\Programming-Libs\cpp\glfw-3.3.8\include;D:\Programming-Libs\cpp\glad_opengl3.3_core\include;D:\Programming-Libs\cpp\glm-0.9.9.8;$(IncludePath)</IncludePath>
-    <ReferencePath>D:\Programming-Libs\cpp\glfw-3.3.8\build\src\Debug;D:\Programming-Libs\cpp\OpenAL1.1\libs\Win64;$(ReferencePath)</ReferencePath>
-    <LibraryPath>D:\Programming-Libs\cpp\glfw-3.3.8\build\src\Debug;D:\Programming-Libs\cpp\OpenAL1.1\libs\Win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Programming-Libs\cpp\openal-soft-1.23.0-bin\include;D:\Programming-Libs\cpp\stb-master;D:\Programming-Libs\cpp\glfw-3.3.8\include;D:\Programming-Libs\cpp\glad_opengl3.3_core\include;D:\Programming-Libs\cpp\glm-0.9.9.8;$(IncludePath)</IncludePath>
+    <ReferencePath>D:\Programming-Libs\cpp\glfw-3.3.8\build\src\Debug;D:\Programming-Libs\cpp\openal-soft-1.23.0-bin\libs\Win64;$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\Programming-Libs\cpp\glfw-3.3.8\build\src\Debug;D:\Programming-Libs\cpp\openal-soft-1.23.0-bin\libs\Win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>D:\Programming-Libs\cpp\glfw-3.3.8\include;D:\Programming-Libs\cpp\glad_opengl3.3_core\include;$(IncludePath)</IncludePath>
@@ -163,6 +163,9 @@
     <ClInclude Include="gameplay.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="animation.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="a.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
