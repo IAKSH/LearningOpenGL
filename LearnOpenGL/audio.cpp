@@ -4,24 +4,90 @@
 #include <fstream>
 #include <array>
 
-flat::Audio::Audio()
+flat::AudioSource::AudioSource()
 {
 
 }
 
-flat::Audio::~Audio()
+flat::AudioSource::~AudioSource()
 {
-
+    releaseAudioSource();
 }
 
-void flat::Audio::loadFromFile(std::string_view path)
+void flat::AudioSource::releaseAudioSource()
 {
-    wav.load(path.data());
+    alDeleteSources(1, &source);
 }
 
-void flat::Audio::play()
+void flat::AudioSource::initialize()
 {
+    alGenSources(1, &source);
+    alSourcef(source, AL_PITCH, 1.0f);
+    alSourcef(source, AL_GAIN, 1.0f);
+}
 
+void flat::AudioSource::play(uint32_t buffer)
+{
+    setBuffer(buffer);
+    play();
+}
+
+void flat::AudioSource::play()
+{
+    alSourcePlay(source);
+}
+
+void flat::AudioSource::stop()
+{
+    alSourceStop(source);
+}
+
+void flat::AudioSource::setBuffer(uint32_t buffer)
+{
+    alSourcei(source, AL_BUFFER, buffer);
+}
+
+void flat::AudioSource::setVelocity(float x, float y, float z)
+{
+    alSource3f(source, AL_VELOCITY, x, y, z);
+}
+
+void flat::AudioSource::setPosition(float x, float y, float z)
+{
+    alSource3f(source, AL_POSITION, x, y, z);
+}
+
+void flat::AudioSource::setLoopable(bool b)
+{
+    alSourcei(source, AL_LOOPING, b);
+}
+
+int flat::AudioSource::getBuffer()
+{
+    int buffer;
+    alGetSourcei(source, AL_BUFFER, &buffer);
+    return buffer;
+}
+
+bool flat::AudioSource::getLoopable()
+{
+    int val;
+    alGetSourcei(source, AL_LOOPING, &val);
+    return static_cast<bool>(val);
+}
+
+std::array<float, 3> flat::AudioSource::getPostion()
+{
+    std::array<float, 3> buffer;
+    alGetSourcefv(source, AL_POSITION, buffer.data());
+    return buffer;
+}
+
+std::array<float, 3> flat::AudioSource::getVelocity()
+{
+    std::array<float, 3> buffer;
+    alGetSourcefv(source, AL_VELOCITY, buffer.data());
+    return buffer;
 }
 
 int wava::WavAudio::getFileCursorMark(std::ifstream& fs, std::string mark)

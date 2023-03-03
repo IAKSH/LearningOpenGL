@@ -88,10 +88,7 @@ void flat::Gameplay::mainLoop()
 {
 	// test
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	//test openAL
-	wava::WavAudio wav("a.wav");
-	beginSound(wav, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -130,6 +127,8 @@ void flat::Gameplay::initialize()
 	initializeGLAD();
 	bindFramebufferSizeCallback();
 	initializeOpenAL();
+	initializeAudio();
+	intializeAudioSource();
 	initializeShader();
 	initializeDraw();
 	initializeTexture();
@@ -141,7 +140,6 @@ void flat::Gameplay::initializeOpenAL()
 	device = alcOpenDevice(nullptr); 
 	context = alcCreateContext(device, nullptr);
 	alcMakeContextCurrent(context);
-	alGenSources(1, &audioSource);
 }
 
 void flat::Gameplay::releaseGLFW()
@@ -157,27 +155,19 @@ void flat::Gameplay::releaseOpenAL()
 	alcCloseDevice(device);
 }
 
-void flat::Gameplay::beginSound(wava::WavAudio& wav, bool loopable, float posX, float posY, float posZ, float velX, float velY, float velZ)
+void flat::Gameplay::initializeAudio()
 {
-	audioSourcePos[0] = posX;
-	audioSourcePos[1] = posY;
-	audioSourcePos[2] = posZ;
-
-	audioSourceVel[0] = velX;
-	audioSourceVel[1] = velY;
-	audioSourceVel[2] = velZ;
-
-	alSourcei(audioSource, AL_BUFFER, wav.getBuffer());
-	alSourcef(audioSource, AL_PITCH, 1.0f);
-	alSourcef(audioSource, AL_GAIN, 1.0f);
-	alSourcefv(audioSource, AL_POSITION, &audioSourcePos.at(0));
-	alSourcefv(audioSource, AL_VELOCITY, &audioSourceVel.at(0));
-	alSourcei(audioSource, AL_LOOPING, static_cast<ALboolean>(loopable));
-
-	alSourcePlay(audioSource);
+	footStep.load("a.wav");
 }
 
-void flat::Gameplay::stopSounds()
+void flat::Gameplay::intializeAudioSource()
 {
-	alSourceStop(audioSource);
+	footStepSource.initialize();
+	footStepSource.setBuffer(footStep.getBuffer());
+	footStepSource.setPosition(0.0f, 0.0f, 0.0f);
+	footStepSource.setVelocity(0.0f, 0.0f, 0.0f);
+	footStepSource.setLoopable(true);
+
+	//test
+	footStepSource.play();
 }

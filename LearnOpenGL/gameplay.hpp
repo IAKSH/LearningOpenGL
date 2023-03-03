@@ -25,14 +25,12 @@ namespace flat
 		flat::Animation ani;
 		flat::Drawable meme;
 		flat::Drawable meme2;
-		GLFWwindow* window = nullptr;
+		flat::AudioSource footStepSource;
+		wava::WavAudio footStep;
 
-		// unstable code
+		GLFWwindow* window = nullptr;
 		ALCdevice* device = nullptr;
 		ALCcontext* context = nullptr;
-		ALuint audioSource;
-		std::array<ALfloat, 3> audioSourcePos;
-		std::array<ALfloat, 3> audioSourceVel;
 
 		void initializeTexture();
 		void initializeShader();
@@ -40,13 +38,12 @@ namespace flat
 		void initializeGLFW();
 		void initializeGLAD();
 		void initializeOpenAL();
+		void initializeAudio();
+		void intializeAudioSource();
 		void bindFramebufferSizeCallback();
 		void releaseGLFW();
 		void releaseOpenAL();
 		void draw();
-		// unstable API
-		void beginSound(wava::WavAudio& wav, bool loopable, float posX, float posY, float posZ, float velX, float velY, float velZ);
-		void stopSounds();
 	public:
 		Gameplay();
 		~Gameplay();

@@ -4,6 +4,7 @@
 #include <AL/alc.h>
 #include <string_view>
 #include <memory>
+#include <array>
 
 namespace wava
 {
@@ -46,14 +47,25 @@ namespace wava
 namespace flat
 {
     // abandoned
-	class Audio
+	class AudioSource
 	{
 	private:
-        wava::WavAudio wav;
+        ALuint source = 0;
+        void releaseAudioSource();
 	public:
-		Audio();
-		~Audio();
-		void loadFromFile(std::string_view path);
-		void play();
+		AudioSource();
+		~AudioSource();
+        void initialize();
+		void play(uint32_t buffer);
+        void play();
+        void stop();
+        int getBuffer();
+        bool getLoopable();
+        std::array<float, 3> getPostion();
+        std::array<float, 3> getVelocity();
+        void setLoopable(bool b);
+        void setPosition(float x, float y, float z);
+        void setVelocity(float x, float y, float z);
+        void setBuffer(uint32_t buffer);
 	};
 }
